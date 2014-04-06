@@ -1,0 +1,687 @@
+> ---Class: C442, I451 , A510
+> ---Semester: Spring 2013
+> ---Assignment: Phase 4
+> ---Student Name: Mast, David
+> create table EventHost
+(
+ID number(5) primary key,
+Type Varchar2(10)
+)
+table EVENTHOST created.
+> create table CourseOwner
+(
+ID number (5) primary key,
+Type varchar2(10)
+)
+table COURSEOWNER created.
+> create table EventOrSession
+(
+ID number(5) primary key,
+Type Varchar2(10)
+)
+table EVENTORSESSION created.
+> create table Organization
+(
+ID number(5) primary key,
+Name varchar2(250) not null,
+AboutUs varchar2(2000) not null,
+Address varchar2(250),
+City varchar2 (50),
+State varchar2(25) not null,
+Country varchar2(50) not null,
+Email varchar2 (100),
+Phone varchar2 (15),
+URL varchar2(200),
+Comments varchar2 (1000),
+ContactPerson varchar2 (200)
+)
+table ORGANIZATION created.
+> create table EUser
+(
+ID number(5) primary key,
+FName varchar2 (50) not null,
+MName varchar2 (50) not null,
+LName varchar2 (50) not null,
+Title varchar2 (15) not null,
+StartDate date not null,
+Address varchar2(250),
+City varchar2 (50),
+State varchar2(25) not null,
+Country varchar2(50) not null,
+Email varchar2 (100),
+Phone varchar2 (15),
+SBio varchar2 (200),
+SBioUpDate date,
+LBio varchar2 (4000),
+LBioUpdate date,
+UserType varchar2 (50) not null,
+Affiliation varchar2 (150),
+IsFaculty char,
+Position varchar2 (150),
+Classification varchar2 (150)
+)
+table EUSER created.
+> Create table University 
+(
+ID number(5) primary key,
+Name varchar(150) not null,
+Address varchar2(250),
+City varchar2 (50),
+State varchar2(25) not null,
+Country varchar2(50) not null,
+Email varchar2 (100),
+Phone varchar2 (15),
+URL varchar2 (200),
+EventHost_ID number(5) not null,
+foreign key (EventHost_ID) references EventHost(ID) on delete cascade
+)
+table UNIVERSITY created.
+> create table Campus
+(
+ID number(5) primary key,
+Name varchar(150) not null,
+Address varchar2(250),
+City varchar2 (50),
+State varchar2(25) not null,
+Country varchar2(50) not null,
+Email varchar2 (100),
+Phone varchar2 (15),
+URL varchar2 (200),
+EventHost_ID number(5) not null,
+University_ID number(5) not null,
+foreign key (EventHost_ID) references EventHost(ID) on delete cascade,
+foreign key (University_ID) references University(ID) on delete cascade
+)
+table CAMPUS created.
+> create table College
+(
+ID number(5) primary key,
+Name varchar(150) not null,
+Address varchar2(250),
+City varchar2 (50),
+State varchar2(25) not null,
+Country varchar2(50) not null,
+Email varchar2 (100),
+Phone varchar2 (15),
+URL varchar2 (200),
+EventHost_ID number(5) not null,
+Campus_ID number(5) not null,
+CourseOwner_ID number(5) not null,
+foreign key (CourseOwner_ID) references CourseOwner(ID) on delete cascade,
+foreign key (EventHost_ID) references EventHost(ID) on delete cascade,
+foreign key (Campus_ID) references Campus(ID) on delete cascade
+)
+table COLLEGE created.
+> create table Unit
+(
+ID number(5) primary key,
+Name varchar(150) not null,
+Address varchar2(250),
+City varchar2 (50),
+State varchar2(25) not null,
+Country varchar2(50) not null,
+Email varchar2 (100),
+Phone varchar2 (15),
+URL varchar2 (200),
+College_ID number(5),
+Campus_ID number(5) not null,
+EventHost_ID number(5) not null,
+CourseOwner_ID number(5) not null,
+foreign key (College_ID) references college(ID),
+foreign key (CourseOwner_ID) references CourseOwner(ID) on delete cascade,
+foreign key (College_ID) references College(ID),
+foreign key (EventHost_ID) references EventHost(ID) on delete cascade
+)
+table UNIT created.
+> create table Course
+(
+Code varchar2 (10),
+CNumber integer,
+Title varchar2 (200) not null,
+CourseOwner_ID number(5) not null,
+primary key (Code, CNumber),
+foreign key (CourseOwner_ID) references CourseOwner(ID) on delete cascade
+)
+table COURSE created.
+> create table Degrees
+(
+User_ID number(5),
+Title varchar2(250),
+UnivName varchar2(250) not null,
+GradYear date not null,
+GradeSemester varchar2 (10),
+GradDate date,
+foreign key (User_ID) references EUser(ID) on delete cascade,
+primary key (User_ID, Title)
+)
+table DEGREES created.
+> create table Faculty
+(
+User_ID number(5) primary key,
+Rank varchar2(150) not null,
+foreign key (User_ID) references EUser(ID) on delete cascade
+)
+table FACULTY created.
+> create table Event
+(
+ID number(5) primary key,
+Title varchar2(300),
+Location varchar2(500),
+StartDateTime date,
+EndDateTime date,
+Type varchar2 (50),
+EventHost_ID number(5) not null,
+EventOrSession_ID number(5) not null,
+foreign key (EventHost_ID) references EventHost(ID) on delete cascade,
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade
+)
+table EVENT created.
+> create table ESession
+(
+ID number(5) primary key,
+Code varchar2(50) not null,
+Title varchar2(300),
+Location varchar2(500),
+StartDateTime date,
+EndDateTime date,
+BldgNameNo varchar2(50),
+RoomNameNo varchar2(50),
+Event_ID number(5) not null,
+EventOrSession_ID number(5) not null,
+foreign key (Event_ID) references Event(ID) on delete cascade,
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade
+)
+table ESESSION created.
+> create table ParticipatedBy
+(
+EventOrSession_ID number(5),
+User_ID number(5),
+primary key(EventOrSession_ID, User_ID),
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade,
+foreign key (User_ID) references EUser(ID) on delete cascade
+)
+table PARTICIPATEDBY created.
+> create table HasSpeaker
+(
+EventOrSession_ID number(5),
+User_ID number(5),
+primary key(EventOrSession_ID, User_ID),
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade,
+foreign key (User_ID) references EUser(ID) on delete cascade
+)
+table HASSPEAKER created.
+> create table ChairedBy
+(
+EventOrSession_ID number(5),
+User_ID number(5),
+primary key(EventOrSession_ID, User_ID),
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade,
+foreign key (User_ID) references EUser(ID) on delete cascade
+)
+table CHAIREDBY created.
+> create table UserSponsor
+(
+EventOrSession_ID number(5),
+User_ID number(5),
+primary key(EventOrSession_ID, User_ID),
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade,
+foreign key (User_ID) references EUser(ID) on delete cascade
+)
+table USERSPONSOR created.
+> create table OrgSponsor
+(
+EventOrSession_ID number(5),
+Organization_ID number(5),
+primary key(EventOrSession_ID, Organization_ID),
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade,
+foreign key (Organization_ID) references Organization(ID) on delete cascade
+)
+table ORGSPONSOR created.
+> create table Handout
+(
+Filename varchar2 (200),
+FType varchar2 (10),
+Tags varchar2 (500),
+EventOrSession_ID number(5),
+primary key (Filename, EventOrSession_ID),
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade
+)
+table HANDOUT created.
+> create table Testimonial
+(
+ID number(5),
+EventOrSession_ID number(5),
+Title varchar2(150),
+Text varchar2(500),
+User_ID number(5),
+primary key(ID, EventOrSession_ID),
+foreign key (EventOrSession_ID) references EventOrSession(ID) on delete cascade,
+foreign key (User_ID) references EUser(ID) on delete cascade
+)
+table TESTIMONIAL created.
+> spool off
+> ---Class: C442, I451 , A510
+> ---Semester: Spring 2013
+> ---Assignment: Phase 4
+> ---Student Name: Mast, David
+> INSERT INTO EventHost (ID, Type) VALUES (10000, 'University')
+1 rows inserted.
+> INSERT INTO EventHost (ID, Type) VALUES (10001, 'Campus')
+1 rows inserted.
+> INSERT INTO EventHost (ID, Type) VALUES (10002, 'College')
+1 rows inserted.
+> INSERT INTO EventHost (ID, Type) VALUES (10003, 'Unit')
+1 rows inserted.
+> INSERT INTO CourseOwner (ID, Type) VALUES (20000, 'College')
+1 rows inserted.
+> INSERT INTO CourseOwner (ID, Type) VALUES (20001, 'Unit')
+1 rows inserted.
+> INSERT INTO EventOrSession (ID, Type) VALUES (30000, 'Event')
+1 rows inserted.
+> INSERT INTO EventOrSession (ID, Type) VALUES (30001, 'Session')
+1 rows inserted.
+> INSERT INTO EventOrSession (ID, Type) VALUES (30002, 'Session')
+1 rows inserted.
+> INSERT INTO EventOrSession (ID, Type) VALUES (30003, 'Event')
+1 rows inserted.
+> INSERT INTO EventOrSession (ID, Type) VALUES (30004, 'Session')
+1 rows inserted.
+> INSERT INTO EventOrSession (ID, Type) VALUES (30005, 'Session')
+1 rows inserted.
+> INSERT INTO Organization (ID, Name, AboutUs, Address, City, State, Country, Email, Phone, URL, Comments, ContactPerson) VALUES 
+(40000, 'Org1', 'OrgAboutUs','OrgAddress1', 'South Bend', 'Indiana', 'United States of America', 'OrgEmail1', 'OrgPhone1', 'OrgURL1', 'OrgComments1', 'OrgContactPerson1')
+1 rows inserted.
+> INSERT INTO EUser (ID, FName, MName, LName, Title, StartDate, Address, City, State, Country, Email, Phone, SBio, SBioUpdate, LBio, LBioUpdate, UserType, Affiliation, IsFaculty, Position, Classification) 
+VALUES (50000, 'F1', 'M1', 'L1', 'UserTitle1', to_date('01-01-2001', 'mm-dd-yyyy'), 'UAddress1', 'South Bend', 'Indiana', 'United States of America', 'UEmail1', 'UPhone1', 'USbio1', to_date('01-01-2001', 'mm-dd-yyyy'), 'ULBio1', to_date('01-01-2001', 'mm-dd-yyyy'), 'Employee', null, 'Y', 'UPosition1', 'UClassification1')
+1 rows inserted.
+> INSERT INTO EUser (ID, FName, MName, LName, Title, StartDate, Address, City, State, Country, Email, Phone, SBio, SBioUpdate, LBio, LBioUpdate, UserType, Affiliation, IsFaculty, Position, Classification) 
+VALUES (50001, 'F2', 'M2', 'L2', 'UserTitle2', to_date('01-01-2002', 'mm-dd-yyyy'), 'UAddress2', 'South Bend', 'Indiana', 'United States of America', 'UEmail2', 'UPhone2', 'USbio2', to_date('01-01-2001', 'mm-dd-yyyy'), 'ULBio2', to_date('01-01-2001', 'mm-dd-yyyy'), 'Guest', 'Affiliation1', 'N', null, null)
+1 rows inserted.
+> INSERT INTO EUser (ID, FName, MName, LName, Title, StartDate, Address, City, State, Country, Email, Phone, SBio, SBioUpdate, LBio, LBioUpdate, UserType, Affiliation, IsFaculty, Position, Classification) 
+VALUES (50002, 'F3', 'M3', 'L3', 'UserTitle1', to_date('01-01-2003', 'mm-dd-yyyy'), 'UAddress3', 'South Bend', 'Indiana', 'United States of America', 'UEmail3', 'UPhone3', 'USbio3', to_date('01-01-2001', 'mm-dd-yyyy'), 'ULBio3', to_date('01-01-2001', 'mm-dd-yyyy'), 'Student', null, 'N', null, null)
+1 rows inserted.
+> INSERT INTO EUser (ID, FName, MName, LName, Title, StartDate, Address, City, State, Country, Email, Phone, SBio, SBioUpdate, LBio, LBioUpdate, UserType, Affiliation, IsFaculty, Position, Classification) 
+VALUES (50003, 'F4', 'M4', 'L4', 'UserTitle3', to_date('01-01-2004', 'mm-dd-yyyy'), 'UAddress4', 'Chicago', 'Illinois', 'United States of America', 'UEmail4', 'UPhone4', 'USbio4', to_date('01-01-2001', 'mm-dd-yyyy'), 'ULBio4', to_date('01-01-2001', 'mm-dd-yyyy'), 'Employee,Student', null, 'N', 'UPosition2', 'UClassification2')
+1 rows inserted.
+> INSERT INTO EUser (ID, FName, MName, LName, Title, StartDate, Address, City, State, Country, Email, Phone, SBio, SBioUpdate, LBio, LBioUpdate, UserType, Affiliation, IsFaculty, Position, Classification) 
+VALUES (50004, 'F5', 'M5', 'L5', 'UserTitle2', to_date('01-01-2005', 'mm-dd-yyyy'), 'UAddress5', 'Chicago', 'Illinois', 'United States of America', 'UEmail5', 'UPhone5', 'USbio5', to_date('01-01-2001', 'mm-dd-yyyy'), 'ULBio5', to_date('01-01-2001', 'mm-dd-yyyy'), 'Guest', 'Affiliation2', 'N', null, null)
+1 rows inserted.
+> INSERT INTO University (ID, Name, Address, City, State, Country, Email, Phone, URL, EventHost_ID) 
+VALUES (60010, 'Univ1', 'UnivAddress1', 'South Bend', 'Indiana', 'UnivCountry1', 'UnivEmail1', 'UnivPhone1', 'UnivURL1', 10000)
+1 rows inserted.
+> INSERT INTO Campus (ID, Name, Address, City, State, Country, Email, Phone, URL, University_ID, EventHost_ID) 
+VALUES (60020, 'Camp1', 'CampAddress1', 'CampCity1', 'CampState1', 'CampCountry1', 'CampEmail1', 'CampPhone1', 'CampURL1', 60010, 10001)
+1 rows inserted.
+> INSERT INTO College (ID, Name, Address, City, State, Country, Email, Phone, URL, Campus_ID, EventHost_ID, CourseOwner_ID) 
+VALUES (60030, 'Coll1', 'CollAddress1', 'CollCity1', 'CollState1', 'CollCountry1', 'CollEmail1', 'CollPhone1', 'CollURL1', 60020, 10002, 20000)
+1 rows inserted.
+> INSERT INTO Unit (ID, Name, Address, City, State, Country, Email, Phone, URL, College_ID, Campus_ID, EventHost_ID, CourseOwner_ID) 
+VALUES (60040, 'Un1', 'UnAddress1', 'UnCity1', 'UnState1', 'UnCountry1', 'UnEmail1', 'UnPhone1', 'UnURL1', 60030, 60020, 10003, 20001)
+1 rows inserted.
+> INSERT INTO Course (Code, CNumber, Title, CourseOwner_ID) VALUES ('Code1', 1, 'Course1', 20000)
+1 rows inserted.
+> INSERT INTO Degrees (User_ID, Title, UnivName, GradYear, GradeSemester, GradDate) VALUES (50000, 'Deg1', 'Univ1', to_date('2001', 'yyyy'), 'Spring', to_date('05-01-2001', 'mm-dd-yyyy'))
+1 rows inserted.
+> INSERT INTO Faculty (User_ID, Rank) VALUES (50000, 'FRank1')
+1 rows inserted.
+> INSERT INTO Event (ID, Title, Location, StartDateTime, EndDateTime, Type, EventHost_ID, EventOrSession_ID) 
+VALUES (70010, 'ETitle1', 'ELocation1', to_date('01-01-2013 18:00', 'mm-dd-yyyy HH24:MI'), to_date('01-01-2013 22:00', 'mm-dd-yyyy HH24:MI'), 'EType1', 10002, 30000)
+1 rows inserted.
+> INSERT INTO Event (ID, Title, Location, StartDateTime, EndDateTime, Type, EventHost_ID, EventOrSession_ID) 
+VALUES (70011, 'ETitle2', 'ELocation2', to_date('01-02-2013 18:00', 'mm-dd-yyyy HH24:MI'), to_date('01-02-2013 22:00', 'mm-dd-yyyy HH24:MI'), 'EType1', 10002, 30000)
+1 rows inserted.
+> INSERT INTO ESession (ID, Code, Title, Location, StartDateTime, EndDateTime, BldgNameNo, RoomNameNo, Event_ID, EventOrSession_ID) 
+VALUES (70020, 'SessCode1', 'SessTitle1', 'SessLocation1',  to_date('01-01-2013 18:00', 'mm-dd-yyyy HH24:MI'), to_date('01-01-2013 20:00', 'mm-dd-yyyy HH24:MI'), 'SessBldg1', 'SessRoom1', 70010, 30001)
+1 rows inserted.
+> INSERT INTO ESession (ID, Code, Title, Location, StartDateTime, EndDateTime, BldgNameNo, RoomNameNo, Event_ID, EventOrSession_ID) 
+VALUES (70021, 'SessCode2', 'SessTitle2', 'SessLocation2',  to_date('01-01-2013 20:00', 'mm-dd-yyyy HH24:MI'), to_date('01-01-2013 22:00', 'mm-dd-yyyy HH24:MI'), 'SessBldg2', 'SessRoom2', 70010, 30002)
+1 rows inserted.
+> INSERT INTO ESession (ID, Code, Title, Location, StartDateTime, EndDateTime, BldgNameNo, RoomNameNo, Event_ID, EventOrSession_ID) 
+VALUES (70023, 'SessCode3', 'SessTitle3', 'SessLocation3',  to_date('01-02-2013 18:00', 'mm-dd-yyyy HH24:MI'), to_date('01-02-2013 20:00', 'mm-dd-yyyy HH24:MI'), 'SessBldg3', 'SessRoom3', 70010, 30004)
+1 rows inserted.
+> INSERT INTO ESession (ID, Code, Title, Location, StartDateTime, EndDateTime, BldgNameNo, RoomNameNo, Event_ID, EventOrSession_ID) 
+VALUES (70024, 'SessCode4', 'SessTitle4', 'SessLocation4',  to_date('01-02-2013 20:00', 'mm-dd-yyyy HH24:MI'), to_date('01-02-2013 22:00', 'mm-dd-yyyy HH24:MI'), 'SessBldg3', 'SessRoom4', 70010, 30005)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30000, 50000)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30000, 50001)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30000, 50002)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30000, 50003)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30000, 50004)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30001, 50000)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30001, 50001)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30001, 50002)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30002, 50002)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30002, 50003)
+1 rows inserted.
+> INSERT INTO ParticipatedBy (EventOrSession_ID, User_ID) VALUES (30002, 50004)
+1 rows inserted.
+> INSERT INTO HasSpeaker (EventOrSession_ID, User_ID) VALUES (30001, 50001)
+1 rows inserted.
+> INSERT INTO ChairedBy (EventOrSession_ID, User_ID) VALUES (30000, 50000)
+1 rows inserted.
+> INSERT INTO UserSponsor (EventOrSession_ID, User_ID) VALUES (30000, 50003)
+1 rows inserted.
+> INSERT INTO OrgSponsor (EventOrSession_ID, Organization_ID) VALUES (30000, 40000)
+1 rows inserted.
+> INSERT INTO Handout (Filename, FType, Tags, EventOrSession_ID) VALUES ('FileName1', 'FType1', 'Tag1,Tag2', 30001)
+1 rows inserted.
+> INSERT INTO Handout (Filename, FType, Tags, EventOrSession_ID) VALUES ('FileName2', 'FType1', 'Tag1,Tag3', 30001)
+1 rows inserted.
+> INSERT INTO Handout (Filename, FType, Tags, EventOrSession_ID) VALUES ('FileName3', 'FType2', 'Tag4,Tag5', 30002)
+1 rows inserted.
+> INSERT INTO Handout (Filename, FType, Tags, EventOrSession_ID) VALUES ('FileName4', 'FType1', 'Tag1,Tag2', 30004)
+1 rows inserted.
+> INSERT INTO Handout (Filename, FType, Tags, EventOrSession_ID) VALUES ('FileName5', 'FType3', 'Tag3,Tag6', 30004)
+1 rows inserted.
+> INSERT INTO Testimonial (ID, EventOrSession_ID, Title, Text, User_ID) VALUES (80000, 30001, 'Test1', 'TextyText', 50000)
+1 rows inserted.
+> spool off
+> ---Class: C442, I451 , A510
+> ---Semester: Spring 2013
+> ---Assignment: Phase 4
+> ---Student Name: Mast, David
+> select * from EventHost
+        ID TYPE     
+---------- ----------
+     10000 University 
+     10001 Campus     
+     10002 College    
+     10003 Unit       
+
+> select * from CourseOwner
+        ID TYPE     
+---------- ----------
+     20000 College    
+     20001 Unit       
+
+> select * from EventOrSession
+        ID TYPE     
+---------- ----------
+     30000 Event      
+     30001 Session    
+     30002 Session    
+     30003 Event      
+     30004 Session    
+     30005 Session    
+
+ 6 rows selected 
+
+> select * from Organization
+        ID NAME                                                                                                                                                                                                                                                       ABOUTUS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ADDRESS                                                                                                                                                                                                                                                    CITY                                               STATE                     COUNTRY                                            EMAIL                                                                                                PHONE           URL                                                                                                                                                                                                      COMMENTS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 CONTACTPERSON                                                                                                                                                                                          
+---------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------------------- -------------------------------------------------- ---------------------------------------------------------------------------------------------------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     40000 Org1                                                                                                                                                                                                                                                       OrgAboutUs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       OrgAddress1                                                                                                                                                                                                                                                South Bend                                         Indiana                   United States of America                           OrgEmail1                                                                                            OrgPhone1       OrgURL1                                                                                                                                                                                                  OrgComments1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             OrgContactPerson1                                                                                                                                                                                        
+
+> select * from EUser
+        ID FNAME                                              MNAME                                              LNAME                                              TITLE           STARTDATE ADDRESS                                                                                                                                                                                                                                                    CITY                                               STATE                     COUNTRY                                            EMAIL                                                                                                PHONE           SBIO                                                                                                                                                                                                     SBIOUPDATE LBIO                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             LBIOUPDATE USERTYPE                                           AFFILIATION                                                                                                                                            ISFACULTY POSITION                                                                                                                                               CLASSIFICATION                                                                                                                                       
+---------- -------------------------------------------------- -------------------------------------------------- -------------------------------------------------- --------------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------------------- -------------------------------------------------- ---------------------------------------------------------------------------------------------------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------- -------------------------------------------------- ------------------------------------------------------------------------------------------------------------------------------------------------------ --------- ------------------------------------------------------------------------------------------------------------------------------------------------------ ------------------------------------------------------------------------------------------------------------------------------------------------------
+     50000 F1                                                 M1                                                 L1                                                 UserTitle1      01-JAN-01 UAddress1                                                                                                                                                                                                                                                  South Bend                                         Indiana                   United States of America                           UEmail1                                                                                              UPhone1         USbio1                                                                                                                                                                                                   01-JAN-01  ULBio1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Employee                                                                                                                                                                                                  Y         UPosition1                                                                                                                                             UClassification1                                                                                                                                       
+     50001 F2                                                 M2                                                 L2                                                 UserTitle2      01-JAN-02 UAddress2                                                                                                                                                                                                                                                  South Bend                                         Indiana                   United States of America                           UEmail2                                                                                              UPhone2         USbio2                                                                                                                                                                                                   01-JAN-01  ULBio2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Guest                                              Affiliation1                                                                                                                                           N                                                                                                                                                                                                                                                                                                                       
+     50002 F3                                                 M3                                                 L3                                                 UserTitle1      01-JAN-03 UAddress3                                                                                                                                                                                                                                                  South Bend                                         Indiana                   United States of America                           UEmail3                                                                                              UPhone3         USbio3                                                                                                                                                                                                   01-JAN-01  ULBio3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Student                                                                                                                                                                                                   N                                                                                                                                                                                                                                                                                                                       
+     50003 F4                                                 M4                                                 L4                                                 UserTitle3      01-JAN-04 UAddress4                                                                                                                                                                                                                                                  Chicago                                            Illinois                  United States of America                           UEmail4                                                                                              UPhone4         USbio4                                                                                                                                                                                                   01-JAN-01  ULBio4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Employee,Student                                                                                                                                                                                          N         UPosition2                                                                                                                                             UClassification2                                                                                                                                       
+     50004 F5                                                 M5                                                 L5                                                 UserTitle2      01-JAN-05 UAddress5                                                                                                                                                                                                                                                  Chicago                                            Illinois                  United States of America                           UEmail5                                                                                              UPhone5         USbio5                                                                                                                                                                                                   01-JAN-01  ULBio5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Guest                                              Affiliation2                                                                                                                                           N                                                                                                                                                                                                                                                                                                                       
+
+> select * from University
+        ID NAME                                                                                                                                                   ADDRESS                                                                                                                                                                                                                                                    CITY                                               STATE                     COUNTRY                                            EMAIL                                                                                                PHONE           URL                                                                                                                                                                                                      EVENTHOST_ID
+---------- ------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------------------- -------------------------------------------------- ---------------------------------------------------------------------------------------------------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+     60010 Univ1                                                                                                                                                  UnivAddress1                                                                                                                                                                                                                                               South Bend                                         Indiana                   UnivCountry1                                       UnivEmail1                                                                                           UnivPhone1      UnivURL1                                                                                                                                                                                                        10000 
+
+> select * from Campus
+        ID NAME                                                                                                                                                   ADDRESS                                                                                                                                                                                                                                                    CITY                                               STATE                     COUNTRY                                            EMAIL                                                                                                PHONE           URL                                                                                                                                                                                                      EVENTHOST_ID UNIVERSITY_ID
+---------- ------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------------------- -------------------------------------------------- ---------------------------------------------------------------------------------------------------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------ -------------
+     60020 Camp1                                                                                                                                                  CampAddress1                                                                                                                                                                                                                                               CampCity1                                          CampState1                CampCountry1                                       CampEmail1                                                                                           CampPhone1      CampURL1                                                                                                                                                                                                        10001         60010 
+
+> select * from College
+        ID NAME                                                                                                                                                   ADDRESS                                                                                                                                                                                                                                                    CITY                                               STATE                     COUNTRY                                            EMAIL                                                                                                PHONE           URL                                                                                                                                                                                                      EVENTHOST_ID  CAMPUS_ID COURSEOWNER_ID
+---------- ------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------------------- -------------------------------------------------- ---------------------------------------------------------------------------------------------------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------ ---------- --------------
+     60030 Coll1                                                                                                                                                  CollAddress1                                                                                                                                                                                                                                               CollCity1                                          CollState1                CollCountry1                                       CollEmail1                                                                                           CollPhone1      CollURL1                                                                                                                                                                                                        10002      60020          20000 
+
+> select * from Unit
+        ID NAME                                                                                                                                                   ADDRESS                                                                                                                                                                                                                                                    CITY                                               STATE                     COUNTRY                                            EMAIL                                                                                                PHONE           URL                                                                                                                                                                                                      COLLEGE_ID  CAMPUS_ID EVENTHOST_ID COURSEOWNER_ID
+---------- ------------------------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------------------- -------------------------------------------------- ---------------------------------------------------------------------------------------------------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------- ---------- ------------ --------------
+     60040 Un1                                                                                                                                                    UnAddress1                                                                                                                                                                                                                                                 UnCity1                                            UnState1                  UnCountry1                                         UnEmail1                                                                                             UnPhone1        UnURL1                                                                                                                                                                                                        60030      60020        10003          20001 
+
+> select * from Course
+CODE          CNUMBER TITLE                                                                                                                                                                                                    COURSEOWNER_ID
+---------- ---------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------------
+Code1               1 Course1                                                                                                                                                                                                           20000 
+
+> select * from Degrees
+   USER_ID TITLE                                                                                                                                                                                                                                                      UNIVNAME                                                                                                                                                                                                                                                   GRADYEAR  GRADESEMESTER GRADDATE
+---------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --------- ------------- ---------
+     50000 Deg1                                                                                                                                                                                                                                                       Univ1                                                                                                                                                                                                                                                      01-APR-01 Spring        01-MAY-01 
+
+> select * from Faculty
+   USER_ID RANK                                                                                                                                                 
+---------- ------------------------------------------------------------------------------------------------------------------------------------------------------
+     50000 FRank1                                                                                                                                                 
+
+> select * from Event
+        ID TITLE                                                                                                                                                                                                                                                                                                        LOCATION                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             STARTDATETIME ENDDATETIME TYPE                                               EVENTHOST_ID EVENTORSESSION_ID
+---------- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------- ----------- -------------------------------------------------- ------------ -----------------
+     70010 ETitle1                                                                                                                                                                                                                                                                                                      ELocation1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-13     01-JAN-13   EType1                                                    10002             30000 
+     70011 ETitle2                                                                                                                                                                                                                                                                                                      ELocation2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           02-JAN-13     02-JAN-13   EType1                                                    10002             30000 
+
+> select * from ESession
+        ID CODE                                               TITLE                                                                                                                                                                                                                                                                                                        LOCATION                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             STARTDATETIME ENDDATETIME BLDGNAMENO                                         ROOMNAMENO                                           EVENT_ID EVENTORSESSION_ID
+---------- -------------------------------------------------- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------- ----------- -------------------------------------------------- -------------------------------------------------- ---------- -----------------
+     70020 SessCode1                                          SessTitle1                                                                                                                                                                                                                                                                                                   SessLocation1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        01-JAN-13     01-JAN-13   SessBldg1                                          SessRoom1                                               70010             30001 
+     70021 SessCode2                                          SessTitle2                                                                                                                                                                                                                                                                                                   SessLocation2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        01-JAN-13     01-JAN-13   SessBldg2                                          SessRoom2                                               70010             30002 
+     70023 SessCode3                                          SessTitle3                                                                                                                                                                                                                                                                                                   SessLocation3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        02-JAN-13     02-JAN-13   SessBldg3                                          SessRoom3                                               70010             30004 
+     70024 SessCode4                                          SessTitle4                                                                                                                                                                                                                                                                                                   SessLocation4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        02-JAN-13     02-JAN-13   SessBldg3                                          SessRoom4                                               70010             30005 
+
+> select * from ParticipatedBy
+EVENTORSESSION_ID    USER_ID
+----------------- ----------
+            30000      50000 
+            30000      50001 
+            30000      50002 
+            30000      50003 
+            30000      50004 
+            30001      50000 
+            30001      50001 
+            30001      50002 
+            30002      50002 
+            30002      50003 
+            30002      50004 
+
+ 11 rows selected 
+
+> select * from HasSpeaker
+EVENTORSESSION_ID    USER_ID
+----------------- ----------
+            30001      50001 
+
+> select * from ChairedBy
+EVENTORSESSION_ID    USER_ID
+----------------- ----------
+            30000      50000 
+
+> select * from UserSponsor
+EVENTORSESSION_ID    USER_ID
+----------------- ----------
+            30000      50003 
+
+> select * from OrgSponsor
+EVENTORSESSION_ID ORGANIZATION_ID
+----------------- ---------------
+            30000           40000 
+
+> select * from Handout
+FILENAME                                                                                                                                                                                                 FTYPE      TAGS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 EVENTORSESSION_ID
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -----------------
+FileName1                                                                                                                                                                                                FType1     Tag1,Tag2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        30001 
+FileName2                                                                                                                                                                                                FType1     Tag1,Tag3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        30001 
+FileName3                                                                                                                                                                                                FType2     Tag4,Tag5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        30002 
+FileName4                                                                                                                                                                                                FType1     Tag1,Tag2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        30004 
+FileName5                                                                                                                                                                                                FType3     Tag3,Tag6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        30004 
+
+> select * from Testimonial
+        ID EVENTORSESSION_ID TITLE                                                                                                                                                  TEXT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    USER_ID
+---------- ----------------- ------------------------------------------------------------------------------------------------------------------------------------------------------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------
+     80000             30001 Test1                                                                                                                                                  TextyText                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 50000 
+
+> spool off
+> ---Class: C442, I451 , A510
+> ---Semester: Spring 2013
+> ---Assignment: Homework 1 Part 2
+> ---Student Name: Mast, David
+> -- 1: A query involving one table to demonstrate select, project, and rename
+> -- 1. Find all users who live in South Bend, Indiana
+> Select * 
+From EUser
+Where City = 'South Bend' AND State = 'Indiana'
+        ID FNAME                                              MNAME                                              LNAME                                              TITLE           STARTDATE ADDRESS                                                                                                                                                                                                                                                    CITY                                               STATE                     COUNTRY                                            EMAIL                                                                                                PHONE           SBIO                                                                                                                                                                                                     SBIOUPDATE LBIO                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             LBIOUPDATE USERTYPE                                           AFFILIATION                                                                                                                                            ISFACULTY POSITION                                                                                                                                               CLASSIFICATION                                                                                                                                       
+---------- -------------------------------------------------- -------------------------------------------------- -------------------------------------------------- --------------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------------------- -------------------------------------------------- ---------------------------------------------------------------------------------------------------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------- -------------------------------------------------- ------------------------------------------------------------------------------------------------------------------------------------------------------ --------- ------------------------------------------------------------------------------------------------------------------------------------------------------ ------------------------------------------------------------------------------------------------------------------------------------------------------
+     50000 F1                                                 M1                                                 L1                                                 UserTitle1      01-JAN-01 UAddress1                                                                                                                                                                                                                                                  South Bend                                         Indiana                   United States of America                           UEmail1                                                                                              UPhone1         USbio1                                                                                                                                                                                                   01-JAN-01  ULBio1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Employee                                                                                                                                                                                                  Y         UPosition1                                                                                                                                             UClassification1                                                                                                                                       
+     50001 F2                                                 M2                                                 L2                                                 UserTitle2      01-JAN-02 UAddress2                                                                                                                                                                                                                                                  South Bend                                         Indiana                   United States of America                           UEmail2                                                                                              UPhone2         USbio2                                                                                                                                                                                                   01-JAN-01  ULBio2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Guest                                              Affiliation1                                                                                                                                           N                                                                                                                                                                                                                                                                                                                       
+     50002 F3                                                 M3                                                 L3                                                 UserTitle1      01-JAN-03 UAddress3                                                                                                                                                                                                                                                  South Bend                                         Indiana                   United States of America                           UEmail3                                                                                              UPhone3         USbio3                                                                                                                                                                                                   01-JAN-01  ULBio3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           01-JAN-01  Student                                                                                                                                                                                                   N                                                                                                                                                                                                                                                                                                                       
+
+> -- 2: A query involving two tables to demonstrate equi-join
+> -- 2. Show how many testimonials each user has written
+> Select user_id, Count(t.ID)
+From EUser u Join Testimonial t on u.id = t.user_id
+Group by user_ID
+   USER_ID COUNT(T.ID)
+---------- -----------
+     50000           1 
+
+> -- 3: A query involving two or more tables to demonstrate aggregation
+> -- 3. Find the number of users who have participated in each type of event
+> Select Type, Count(User_ID)
+From ParticipatedBy P Join EventOrSession E On P.EventOrSession_ID = E.ID
+Group by Type
+TYPE       COUNT(USER_ID)
+---------- --------------
+Session                 6 
+Event                   5 
+
+> -- 4: A query involving two or more tables to demonstrate division
+> -- 4. Find all users who have participated in all sessions of the event 70010
+> Select ID
+From EUser E
+Where not exists
+  (
+    Select S.EventOrSession_ID FROM ESession S Join Event E On S.Event_ID = E.ID Where E.ID = 70010
+    Minus
+    Select EventOrSession_ID FROM ESession Natural Join ParticipatedBy Where User_ID = E.ID 
+  )
+no rows selected
+
+
+> -- 5: A query involving three or more tables to demonstrate grouping
+> -- 5. For each session show the number of handouts that were used
+> Select E.ID, Count(Handout.Filename)
+From  ESession E Join EventOrSession S on E.EventOrSession_ID = S.ID, Handout
+Where Handout.EventOrSession_ID = E.EventOrSession_ID
+Group By E.ID
+        ID COUNT(HANDOUT.FILENAME)
+---------- -----------------------
+     70023                       2 
+     70020                       2 
+     70021                       1 
+
+> -- 6: A query involving three or more tables to demonstrate outer join/outer union
+> spool off
+> ---Class: C442, I451 , A510
+> ---Semester: Spring 2013
+> ---Assignment: Phase 4
+> ---Student Name: Mast, David
+> delete from TESTIMONIAL
+1 rows deleted.
+> delete from Handout
+5 rows deleted.
+> delete from OrgSponsor
+1 rows deleted.
+> delete from UserSponsor
+1 rows deleted.
+> delete from ChairedBy
+1 rows deleted.
+> delete from HasSpeaker
+1 rows deleted.
+> delete from ParticipatedBy
+11 rows deleted.
+> delete from ESession
+4 rows deleted.
+> delete from Event
+2 rows deleted.
+> delete from Faculty
+1 rows deleted.
+> delete from Degrees
+1 rows deleted.
+> delete from Course
+1 rows deleted.
+> delete from Unit
+1 rows deleted.
+> delete from College
+1 rows deleted.
+> delete from Campus
+1 rows deleted.
+> delete from University
+1 rows deleted.
+> delete from EUser
+5 rows deleted.
+> delete from Organization
+1 rows deleted.
+> delete from EventOrSession
+6 rows deleted.
+> delete from CourseOwner
+2 rows deleted.
+> delete from EventHost
+4 rows deleted.
+> spool off
+> ---Class: C442, I451 , A510
+> ---Semester: Spring 2013
+> ---Assignment: Phase 4
+> ---Student Name: Mast, David
+> drop table Testimonial
+table TESTIMONIAL dropped.
+> drop table Handout
+table HANDOUT dropped.
+> drop table OrgSponsor
+table ORGSPONSOR dropped.
+> drop table UserSponsor
+table USERSPONSOR dropped.
+> drop table ChairedBy
+table CHAIREDBY dropped.
+> drop table HasSpeaker
+table HASSPEAKER dropped.
+> drop table ParticipatedBy
+table PARTICIPATEDBY dropped.
+> drop table ESession
+table ESESSION dropped.
+> drop table Event
+table EVENT dropped.
+> drop table Faculty
+table FACULTY dropped.
+> drop table Degrees
+table DEGREES dropped.
+> drop table Course
+table COURSE dropped.
+> drop table Unit
+table UNIT dropped.
+> drop table College
+table COLLEGE dropped.
+> drop table Campus
+table CAMPUS dropped.
+> drop table University
+table UNIVERSITY dropped.
+> drop table EUser
+table EUSER dropped.
+> drop table Organization
+table ORGANIZATION dropped.
+> drop table EventOrSession
+table EVENTORSESSION dropped.
+> drop table CourseOwner
+table COURSEOWNER dropped.
+> drop table EventHost
+table EVENTHOST dropped.
+> spool off
